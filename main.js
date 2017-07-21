@@ -15,21 +15,27 @@ iota.api.getNodeInfo((err, data) => {
 	console.log(data)
 })
 
-let addr = document.querySelector('#addr')
+let seed = document.querySelector('#seed')
 let lookup = document.querySelector('#lookup')
 let output = document.querySelector('#output')
 
 lookup.addEventListener('click', () => {
-	iota.api.findTransactionObjects({'addresses': [addr.value]}, (err, data) => {
+	const s = seed.value
+
+	if (!iota.valid.isTrytes(s))
+	{
+		output.innerHTML = 'Invalid seed.'
+		return
+	}
+
+	iota.api.getAccountData(s, (err, data) => {
 		if (err)
 		{
-			console.log(`Error: Failed to find transaction info: ${err}`)
+			console.log(`Error: Failed to get account data: ${err}`)
 			return
 		}
 
-		for (let i in data)
-		{
-			output.innerHTML += `<div>${data[i].value}</div>`
-		}
+		console.log(data)
+		output.innerHTML = data.balance
 	})
 })
