@@ -1,0 +1,27 @@
+{
+  "name": "scrap",
+  "version": "0.1.0",
+  "description": "A simple light wallet for IOTA.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeedleFake/scrap.git"
+  },
+  "keywords": [
+    "crypto",
+    "iota",
+    "wallet"
+  ],
+  "author": "DeedleFake",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DeedleFake/scrap/issues"
+  },
+  "homepage": "https://github.com/DeedleFake/scrap#readme",
+  "dependencies": {
+    "iota.lib.js": "^0.3.8"
+  }
+}
