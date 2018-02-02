@@ -1,0 +1,31 @@
+{
+  "name": "minimal-react-electron-app",
+  "version": "0.1.0",
+  "description": "Minimal React/Electron App",
+  "main": "index.js",
+  "homepage": ".",
+  "scripts": {
+    "start": "concurrently -k 'npm run react' 'wait-for-server http://localhost:3000 && npm run electron'",
+    "react": "BROWSER=none react-scripts start",
+    "electron": "ELECTRON_START_URL=http://localhost:3000 electron .",
+    "build": "react-scripts build && cp -a package.json index.js node_modules build/ # && cd build && npm prune --production",
+    "package": "electron-packager --out=out build 'Minimal React/Electron App'",
+    "clean": "rm -fr build out",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "electron": "^1.7.12",
+    "electron-devtools-installer": "^2.2.3",
+    "electron-packager": "^10.1.2",
+    "react-scripts": "^1.1.0",
+    "wait-for-server": "^0.1.1"
+  }
+}
