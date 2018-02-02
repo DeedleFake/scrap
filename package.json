@@ -1,7 +1,7 @@
 {
-  "name": "minimal-react-electron-app",
+  "name": "scrap",
   "version": "0.1.0",
-  "description": "Minimal React/Electron App",
+  "description": "Cryptocurrency Portfolio Tracker",
   "main": "index.js",
   "homepage": ".",
   "scripts": {

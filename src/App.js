@@ -1,34 +1,35 @@
 import React, { Component } from 'react'
+import EventEmitter from 'events'
 
-import cmc from './coinmarketcap'
+import Ticker from './Ticker'
 
 class App extends Component {
 	state = {
-		coins: [],
+		lastUpdate: new Date(),
 	}
 
-	async componentDidMount() {
-		try {
-			let coins = await cmc.getTicker({limit: 3})
-			this.setState({
-				coins: coins,
-			})
-		}
-		catch (err) {
-			console.error(`Failed to get ticker: ${err}`)
-		}
+	componentDidMount() {
+		this.updateInterval = setInterval(this.update, 30000)
+		this.update()
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.updateInterval)
+	}
+
+	update = () => {
+		this.setState({
+			lastUpdate: new Date(),
+		})
 	}
 
 	render() {
 		return (
-			<div className='App'>
-				{this.state.coins.map((coin) => (
-					<img
-						key={coin.id}
-						alt={coin.id}
-						src={cmc.getImageURL(coin.id)}
-					/>
-				))}
+			<div>
+				<Ticker
+					lastUpdate={this.state.lastUpdate}
+					limit={5}
+				/>
 			</div>
 		)
 	}
