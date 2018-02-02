@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import EventEmitter from 'events'
 
 import Ticker from './Ticker'
 
 class App extends Component {
 	state = {
 		lastUpdate: new Date(),
+
+		limit: 5,
+		direction: false,
 	}
 
 	componentDidMount() {
@@ -28,8 +30,25 @@ class App extends Component {
 			<div>
 				<Ticker
 					lastUpdate={this.state.lastUpdate}
-					limit={5}
+					limit={this.state.limit}
+					direction={this.state.direction ? 'column' : 'row'}
 				/>
+
+				<input type='button' value='--' onClick={() => {
+					this.setState({
+						limit: this.state.limit - 1,
+					})
+				}} />
+				<input type='button' value='Switch Direction' onClick={() => {
+					this.setState({
+						direction: !this.state.direction,
+					})
+				}} />
+				<input type='button' value='++' onClick={() => {
+					this.setState({
+						limit: this.state.limit + 1,
+					})
+				}} />
 			</div>
 		)
 	}

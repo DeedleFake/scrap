@@ -2,34 +2,36 @@ import React, { Component } from 'react'
 
 import cmc from './coinmarketcap'
 
-const styles = {
-	main: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-	},
-
-	coin:{
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-	},
-}
-
 class Ticker extends Component {
 	state = {
 		coins: [],
 	}
 
-	componentWillReceiveProps() {
-		this.update()
+	styles = () => ({
+		main: {
+			display: 'flex',
+			flexDirection: this.props.direction || 'row',
+			justifyContent: 'space-around',
+		},
+
+		coin: {
+			display: 'flex',
+			flexDirection: 'column',
+			alignItems: 'center',
+		},
+	})
+
+	componentWillReceiveProps(props) {
+		this.update(props)
 	}
 
-	update = async () => {
-		try {
-			console.log('Updating ticker...')
+	update = async (props) => {
+		if (!props) {
+			props = this.props
+		}
 
-			let coins = await cmc.getTicker({limit: 5})
+		try {
+			let coins = await cmc.getTicker({limit: props.limit || 5})
 			this.setState({
 				coins: coins,
 			})
@@ -41,9 +43,9 @@ class Ticker extends Component {
 
 	render() {
 		return (
-			<div style={styles.main}>
+			<div style={this.styles().main}>
 				{this.state.coins.map((coin) => (
-					<div key={coin.id} style={styles.coin}>
+					<div key={coin.id} style={this.styles().coin}>
 						<img
 							alt={coin.id}
 							src={cmc.getImageURL(coin.id)}
