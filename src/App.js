@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import Toolbar from './Toolbar'
 import Ticker from './Ticker'
 
 class App extends Component {
@@ -9,6 +10,13 @@ class App extends Component {
 		limit: 5,
 		direction: false,
 	}
+
+	style = () => ({
+		main: {
+			display: 'flex',
+			flexDirection: 'column',
+		},
+	})
 
 	componentDidMount() {
 		this.updateInterval = setInterval(this.update, 30000)
@@ -27,12 +35,14 @@ class App extends Component {
 
 	render() {
 		return (
-			<div>
-				<Ticker
-					lastUpdate={this.state.lastUpdate}
-					limit={this.state.limit}
-					direction={this.state.direction ? 'column' : 'row'}
-				/>
+			<div style={this.style().main}>
+				<Toolbar>
+					<Ticker
+						lastUpdate={this.state.lastUpdate}
+						limit={this.state.limit}
+						direction={this.state.direction ? 'column' : 'row'}
+					/>
+				</Toolbar>
 
 				<input type='button' value='--' onClick={() => {
 					this.setState({

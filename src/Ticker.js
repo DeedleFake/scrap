@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { Image } from 'react-bootstrap'
+
+import Price from './Price'
 
 import cmc from './coinmarketcap'
 
@@ -7,7 +10,7 @@ class Ticker extends Component {
 		coins: [],
 	}
 
-	styles = () => ({
+	style = () => ({
 		main: {
 			display: 'flex',
 			flexDirection: this.props.direction || 'row',
@@ -16,8 +19,14 @@ class Ticker extends Component {
 
 		coin: {
 			display: 'flex',
-			flexDirection: 'column',
+			flexDirection: 'row',
 			alignItems: 'center',
+			margin: '8px',
+			height: '32px',
+		},
+
+		coinImage: {
+			margin: '4px',
 		},
 	})
 
@@ -43,14 +52,19 @@ class Ticker extends Component {
 
 	render() {
 		return (
-			<div style={this.styles().main}>
+			<div style={this.style().main}>
 				{this.state.coins.map((coin) => (
-					<div key={coin.id} style={this.styles().coin}>
-						<img
+					<div key={coin.id} style={this.style().coin}>
+						<Image
+							style={this.style().coinImage}
 							alt={coin.id}
 							src={cmc.getImageURL(coin.id)}
+							responsive={true}
 						/>
-						<span>${coin.price_usd}</span>
+						<Price
+							price={coin.price_usd}
+							format={'USD'}
+						/>
 					</div>
 				))}
 			</div>
