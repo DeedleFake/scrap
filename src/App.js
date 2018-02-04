@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import Toolbar from './Toolbar'
 import Ticker from './Ticker'
 
 class App extends Component {
@@ -15,6 +14,29 @@ class App extends Component {
 		main: {
 			display: 'flex',
 			flexDirection: 'column',
+		},
+
+		toolbar: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+
+			flex: '0 0 48px',
+			padding: '4px',
+			backgroundColor: '#AAAAAA',
+		},
+
+		toolbarRight: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'flex-end',
+		},
+
+		coinList: {
+			display: 'flex',
+			flexDirection: 'column',
+
+			overflow: 'auto',
 		},
 	})
 
@@ -36,29 +58,34 @@ class App extends Component {
 	render() {
 		return (
 			<div style={this.style().main}>
-				<Toolbar>
+				<div style={this.style().toolbar}>
+					<div style={this.style().toolbarLeft}>
+					</div>
+
 					<Ticker
 						lastUpdate={this.state.lastUpdate}
 						limit={this.state.limit}
 						direction={this.state.direction ? 'column' : 'row'}
 					/>
-				</Toolbar>
 
-				<input type='button' value='--' onClick={() => {
-					this.setState({
-						limit: this.state.limit - 1,
-					})
-				}} />
-				<input type='button' value='Switch Direction' onClick={() => {
-					this.setState({
-						direction: !this.state.direction,
-					})
-				}} />
-				<input type='button' value='++' onClick={() => {
-					this.setState({
-						limit: this.state.limit + 1,
-					})
-				}} />
+					<div style={this.style().toolbarRight}>
+						<input type='button' value='--' onClick={() => {
+							this.setState({
+								limit: this.state.limit - 1,
+							})
+						}} />
+						<input type='button' value='Switch Direction' onClick={() => {
+							this.setState({
+								direction: !this.state.direction,
+							})
+						}} />
+						<input type='button' value='++' onClick={() => {
+							this.setState({
+								limit: this.state.limit + 1,
+							})
+						}} />
+					</div>
+				</div>
 			</div>
 		)
 	}
