@@ -11,7 +11,7 @@ import utils from './utils'
 const Configstore = window.require('configstore')
 
 const defaultSettings = {
-	tickerSize: 5,
+	tickerSize: 3,
 	portfolioLocation: null,
 }
 
