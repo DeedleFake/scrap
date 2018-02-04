@@ -9,14 +9,6 @@ class Ticker extends Component {
 		coins: [],
 	}
 
-	style = () => ({
-		main: {
-			display: 'flex',
-			flexDirection: this.props.direction || 'row',
-			justifyContent: 'space-around',
-		},
-	})
-
 	componentWillReceiveProps(props) {
 		this.update(props)
 	}
@@ -39,9 +31,9 @@ class Ticker extends Component {
 
 	render() {
 		return (
-			<div style={Object.assign(this.style().main, this.props.style || {})}>
+			<div className={`Ticker ${this.props.className}`}>
 				{this.state.coins.map((coin, i) => (
-					<div key={coin.id} style={this.style().coin}>
+					<div key={coin.id}>
 						<CoinBadge
 							coin={coin}
 						/>

@@ -10,41 +10,6 @@ class App extends Component {
 		direction: false,
 	}
 
-	style = () => ({
-		main: {
-			display: 'flex',
-			flexDirection: 'column',
-		},
-
-		toolbar: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'space-between',
-
-			padding: '4px',
-			backgroundColor: '#AAAAAA',
-		},
-
-		toolbarLeft: {
-		},
-
-		toolbarCenter: {
-		},
-
-		toolbarRight: {
-			display: 'flex',
-			flexDirection: 'row',
-			justifyContent: 'flex-end',
-		},
-
-		coinList: {
-			display: 'flex',
-			flexDirection: 'column',
-
-			overflow: 'auto',
-		},
-	})
-
 	componentDidMount() {
 		this.updateInterval = setInterval(this.update, 30000)
 		this.update()
@@ -62,19 +27,19 @@ class App extends Component {
 
 	render() {
 		return (
-			<div style={this.style().main}>
-				<div style={this.style().toolbar}>
-					<div style={this.style().toolbarLeft}>
+			<div className='App'>
+				<div className='toolbar'>
+					<div className='left'>
 					</div>
 
 					<Ticker
-						style={this.style().toolbarCenter}
+						className='center'
 						lastUpdate={this.state.lastUpdate}
 						limit={this.state.limit}
 						direction={this.state.direction ? 'column' : 'row'}
 					/>
 
-					<div style={this.style().toolbarRight}>
+					<div className='right'>
 						<input type='button' value='--' onClick={() => {
 							this.setState({
 								limit: this.state.limit - 1,

@@ -6,29 +6,11 @@ import Price from './Price'
 import cmc from './coinmarketcap'
 
 class CoinBadge extends Component {
-	style = () => ({
-		main: {
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-
-			backgroundColor: '#CCCCCC',
-			borderRadius: '4px',
-			padding: '4px',
-			margin: '4px',
-			height: '32px',
-		},
-
-		image: {
-			margin: '4px',
-		},
-	})
-
 	render() {
 		return (
-			<div style={this.style().main}>
+			<div className='CoinBadge'>
 				<Image
-					style={this.style().image}
+					className='Image'
 					alt={this.props.coin.id}
 					src={cmc.getImageURL(this.props.coin.id)}
 					responsive={true}
