@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Modal } from 'react-bootstrap'
+import { Alert, Button, Modal } from 'react-bootstrap'
 
 import Settings from './Settings'
 import Ticker from './Ticker'
@@ -8,6 +8,7 @@ const Configstore = window.require('configstore')
 
 const defaultSettings = {
 	tickerSize: 5,
+	portfolioLocation: null,
 }
 
 class App extends Component {
@@ -90,6 +91,7 @@ class App extends Component {
 				</div>
 
 				<div className='main'>
+					{!this.state.portfolioLocation ? <Alert bsStyle='warning'>No portfolio location chosen. Please do so in Settings.</Alert> : null}
 				</div>
 
 				<Modal show={this.state.modal === 'add-coin'} onHide={this.hideModal}>

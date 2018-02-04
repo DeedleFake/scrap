@@ -71,3 +71,9 @@
 {
 	margin: 4px;
 }
+
+.well-row
+{
+	display: flex;
+	flex-direction: row;
+}
