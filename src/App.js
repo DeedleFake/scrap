@@ -21,9 +21,14 @@ class App extends Component {
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 
-			flex: '0 0 48px',
 			padding: '4px',
 			backgroundColor: '#AAAAAA',
+		},
+
+		toolbarLeft: {
+		},
+
+		toolbarCenter: {
 		},
 
 		toolbarRight: {
@@ -63,6 +68,7 @@ class App extends Component {
 					</div>
 
 					<Ticker
+						style={this.style().toolbarCenter}
 						lastUpdate={this.state.lastUpdate}
 						limit={this.state.limit}
 						direction={this.state.direction ? 'column' : 'row'}
