@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, Button, Modal } from 'react-bootstrap'
+import { Alert, Button } from 'react-bootstrap'
 
 import Total from './Total'
 import Ticker from './Ticker'
@@ -139,26 +139,12 @@ class App extends Component {
 					}
 				</div>
 
-				<Modal show={this.state.modal === 'add'} onHide={this.hideModal}>
-					<Modal.Header closeButton>
-						<Modal.Title>Add</Modal.Title>
-					</Modal.Header>
+				<Add
+					show={this.state.modal === 'add'}
+					onHide={this.hideModal}
 
-					<Modal.Body>
-						<Add getAddVal={(v) => this.getAddVal = v} />
-					</Modal.Body>
-
-					<Modal.Footer>
-						<Button
-							bsStyle='primary'
-							onClick={this.add}
-						>Add</Button>
-						<Button
-							bsStyle='danger'
-							onClick={this.hideModal}
-						>Cancel</Button>
-					</Modal.Footer>
-				</Modal>
+					onAdd={this.add}
+				/>
 
 				<Settings
 					show={this.state.modal === 'settings'}
