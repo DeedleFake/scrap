@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Button, Modal } from 'react-bootstrap'
 
 import Ticker from './Ticker'
 
@@ -8,6 +9,8 @@ class App extends Component {
 
 		limit: 5,
 		direction: false,
+
+		modal: null,
 	}
 
 	componentDidMount() {
@@ -22,6 +25,18 @@ class App extends Component {
 	update = () => {
 		this.setState({
 			lastUpdate: new Date(),
+		})
+	}
+
+	showModal = (name) => {
+		this.setState({
+			modal: name,
+		})
+	}
+
+	hideModal = () => {
+		this.setState({
+			modal: null,
 		})
 	}
 
@@ -40,23 +55,32 @@ class App extends Component {
 					/>
 
 					<div className='right'>
-						<input type='button' value='--' onClick={() => {
-							this.setState({
-								limit: this.state.limit - 1,
-							})
-						}} />
-						<input type='button' value='Switch Direction' onClick={() => {
-							this.setState({
-								direction: !this.state.direction,
-							})
-						}} />
-						<input type='button' value='++' onClick={() => {
-							this.setState({
-								limit: this.state.limit + 1,
-							})
-						}} />
+						<Button
+							bsStyle='primary'
+							onClick={() => this.showModal('add')}
+						>Add</Button>
 					</div>
 				</div>
+
+				<div className='main'>
+				</div>
+
+				<Modal show={this.state.modal === 'add'} onHide={this.hideModal}>
+					<Modal.Header closeButton>
+						<Modal.Title>Add Coin</Modal.Title>
+					</Modal.Header>
+
+					<Modal.Body>
+						This isn't implemented yet. Oh well.
+					</Modal.Body>
+
+					<Modal.Footer>
+						<Button
+							bsStyle='danger'
+							onClick={this.hideModal}
+						>Cancel</Button>
+					</Modal.Footer>
+				</Modal>
 			</div>
 		)
 	}
