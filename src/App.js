@@ -57,21 +57,43 @@ class App extends Component {
 					<div className='right'>
 						<Button
 							bsStyle='primary'
-							onClick={() => this.showModal('add')}
+							onClick={() => this.showModal('add-coin')}
 						>Add</Button>
+
+						<Button
+							bsStyle='info'
+							onClick={() => this.showModal('settings')}
+						>Settings</Button>
 					</div>
 				</div>
 
 				<div className='main'>
 				</div>
 
-				<Modal show={this.state.modal === 'add'} onHide={this.hideModal}>
+				<Modal show={this.state.modal === 'add-coin'} onHide={this.hideModal}>
 					<Modal.Header closeButton>
 						<Modal.Title>Add Coin</Modal.Title>
 					</Modal.Header>
 
 					<Modal.Body>
 						This isn't implemented yet. Oh well.
+					</Modal.Body>
+
+					<Modal.Footer>
+						<Button
+							bsStyle='danger'
+							onClick={this.hideModal}
+						>Cancel</Button>
+					</Modal.Footer>
+				</Modal>
+
+				<Modal show={this.state.modal === 'settings'} onHide={this.hideModal}>
+					<Modal.Header closeButton>
+						<Modal.Title>Settings</Modal.Title>
+					</Modal.Header>
+
+					<Modal.Body>
+						This isn't implemented either. Gosh darn it.
 					</Modal.Body>
 
 					<Modal.Footer>

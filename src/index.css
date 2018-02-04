@@ -29,6 +29,11 @@
 	justify-content: flex-end;
 }
 
+.App .toolbar .right > *
+{
+	margin: 0px 4px;
+}
+
 .Ticker
 {
 	display: flex;
