@@ -12,9 +12,9 @@ const parseFields = (struct) => {
 	return struct
 }
 
-const getImageURL = (coin) => {
-	return `https://files.coinmarketcap.com/static/img/coins/32x32/${coin}.png`
-}
+const getCoinURL = (coin) => `https://coinmarketcap.com/currencies/${coin}`
+
+const getImageURL = (coin) => `https://files.coinmarketcap.com/static/img/coins/32x32/${coin}.png`
 
 const getTicker = async (options) => {
 	const q = Object.entries(options).map(([k, v]) => (
@@ -39,6 +39,7 @@ const getTicker = async (options) => {
 }
 
 export default {
-	getTicker,
+	getCoinURL,
 	getImageURL,
+	getTicker,
 }

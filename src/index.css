@@ -42,11 +42,24 @@
 	flex-direction: row;
 	align-items: center;
 
+	color: inherit;
 	background-color: #CCCCCC;
 	border-radius: 4px;
 	padding: 4px;
 	margin: 4px;
 	height: 32px;
+	cursor: pointer;
+}
+
+.CoinBadge:hover
+{
+	text-decoration: none;
+	background-color: #DDDDDD;
+}
+
+.CoinBadge.not-link
+{
+	cursor: default;
 }
 
 .CoinBadge .Image

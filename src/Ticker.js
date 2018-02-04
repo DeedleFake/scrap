@@ -36,6 +36,7 @@ class Ticker extends Component {
 					<div key={coin.id}>
 						<CoinBadge
 							coin={coin}
+							link
 						/>
 					</div>
 				))}

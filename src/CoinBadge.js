@@ -5,10 +5,19 @@ import Price from './Price'
 
 import cmc from './coinmarketcap'
 
+const { shell } = window.require('electron')
+
 class CoinBadge extends Component {
+	openCoin = () => {
+		shell.openExternal(cmc.getCoinURL(this.props.coin.id))
+	}
+
 	render() {
 		return (
-			<div className='CoinBadge'>
+			<a
+				className={`CoinBadge ${!this.props.link ? 'not-link' : ''}`}
+				onClick={this.props.link ? this.openCoin : null}
+			>
 				<Image
 					className='Image'
 					alt={this.props.coin.id}
@@ -19,7 +28,7 @@ class CoinBadge extends Component {
 					price={this.props.coin.price_usd}
 					format={'USD'}
 				/>
-			</div>
+			</a>
 		)
 	}
 }
