@@ -1,31 +1,53 @@
 import React, { Component } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 
+import Settings from './Settings'
 import Ticker from './Ticker'
+
+const Configstore = window.require('configstore')
+
+const defaultSettings = {
+	tickerSize: 5,
+}
 
 class App extends Component {
 	state = {
 		lastUpdate: new Date(),
-
-		limit: 5,
-		direction: false,
-
 		modal: null,
 	}
 
+	componentWillMount() {
+		if (!this.config) {
+			this.config = new Configstore('scrap', defaultSettings)
+			this.setState(this.config.all)
+		}
+	}
+
 	componentDidMount() {
-		this.updateInterval = setInterval(this.update, 30000)
+		if (!this.updateInterval) {
+			this.updateInterval = setInterval(this.update, 30000)
+		}
 		this.update()
 	}
 
 	componentWillUnmount() {
 		clearInterval(this.updateInterval)
+		this.updateInterval = null
 	}
 
 	update = () => {
 		this.setState({
 			lastUpdate: new Date(),
 		})
+	}
+
+	get settings() {
+		return this.config.all
+	}
+
+	setSettings = (obj) => {
+		this.config.set(obj)
+		this.setState(obj)
 	}
 
 	showModal = (name) => {
@@ -50,7 +72,7 @@ class App extends Component {
 					<Ticker
 						className='center'
 						lastUpdate={this.state.lastUpdate}
-						limit={this.state.limit}
+						limit={this.state.tickerSize}
 						direction={this.state.direction ? 'column' : 'row'}
 					/>
 
@@ -93,14 +115,17 @@ class App extends Component {
 					</Modal.Header>
 
 					<Modal.Body>
-						This isn't implemented either. Gosh darn it.
+						<Settings
+							{...this.state}
+							onChange={this.setSettings}
+						/>
 					</Modal.Body>
 
 					<Modal.Footer>
 						<Button
-							bsStyle='danger'
+							bsStyle='primary'
 							onClick={this.hideModal}
-						>Cancel</Button>
+						>Close</Button>
 					</Modal.Footer>
 				</Modal>
 			</div>
