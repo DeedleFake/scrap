@@ -3,8 +3,9 @@ import { Alert, Button, Modal } from 'react-bootstrap'
 
 import Total from './Total'
 import Ticker from './Ticker'
-import Settings from './Settings'
 import CoinList from './CoinList'
+import Add from './Add'
+import Settings from './Settings'
 import utils from './utils'
 
 const Configstore = window.require('configstore')
@@ -80,6 +81,7 @@ class App extends Component {
 			})
 		}
 		catch (err) {
+			// TODO: Show an error to the user?
 			console.error(`Failed to load portfolio: ${err}`)
 		}
 	}
@@ -89,6 +91,7 @@ class App extends Component {
 			await utils.writeFile(this.state.portfolioLocation, JSON.stringify(this.state.portfolio))
 		}
 		catch (err) {
+			// TODO: Show an error to the user.
 			console.error(`Failed to save portfolio: ${err}`)
 		}
 	}
@@ -142,10 +145,14 @@ class App extends Component {
 					</Modal.Header>
 
 					<Modal.Body>
-						This isn't implemented yet. Oh well.
+						<Add getAddVal={(v) => this.getAddVal = v} />
 					</Modal.Body>
 
 					<Modal.Footer>
+						<Button
+							bsStyle='primary'
+							onClick={this.add}
+						>Add</Button>
 						<Button
 							bsStyle='danger'
 							onClick={this.hideModal}
@@ -153,25 +160,13 @@ class App extends Component {
 					</Modal.Footer>
 				</Modal>
 
-				<Modal show={this.state.modal === 'settings'} onHide={this.hideModal}>
-					<Modal.Header closeButton>
-						<Modal.Title>Settings</Modal.Title>
-					</Modal.Header>
+				<Settings
+					show={this.state.modal === 'settings'}
+					onHide={this.hideModal}
 
-					<Modal.Body>
-						<Settings
-							{...this.state}
-							onChange={this.setSettings}
-						/>
-					</Modal.Body>
-
-					<Modal.Footer>
-						<Button
-							bsStyle='primary'
-							onClick={this.hideModal}
-						>Close</Button>
-					</Modal.Footer>
-				</Modal>
+					{...this.state}
+					onChange={this.setSettings}
+				/>
 			</div>
 		)
 	}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
+import { Modal, Button, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
 const { dialog, getCurrentWindow } = window.require('electron').remote
 
@@ -35,37 +35,52 @@ class Settings extends Component {
 
 	render() {
 		return (
-			<div className='Settings'>
-				<FormGroup controlId='portfolioLocation'>
-					<ControlLabel>Portfolio Location</ControlLabel>
+			<Modal show={this.props.show} onHide={this.props.onHide}>
+				<Modal.Header closeButton>
+					<Modal.Title>Settings</Modal.Title>
+				</Modal.Header>
 
-					<Well bsStyle='row'>
-						<FormControl
-							type='text'
-							readOnly
-							value={this.props.portfolioLocation || 'No location chosen.'}
-						/>
-						<Button
-							bsStyle='primary'
-							onClick={this.setPortfolioLocation}
-						>Browse</Button>
-					</Well>
-				</FormGroup>
+				<Modal.Body>
+					<div className='Settings'>
+						<FormGroup controlId='portfolioLocation'>
+							<ControlLabel>Portfolio Location</ControlLabel>
 
-				<FormGroup controlId='tickerSize'>
-					<ControlLabel>Ticker Size</ControlLabel>
+							<Well bsStyle='row'>
+								<FormControl
+									type='text'
+									readOnly
+									value={this.props.portfolioLocation || 'No location chosen.'}
+								/>
+								<Button
+									bsStyle='primary'
+									onClick={this.setPortfolioLocation}
+								>Browse</Button>
+							</Well>
+						</FormGroup>
 
-					<Well bsStyle='row'>
-						<FormControl
-							type='number'
-							value={this.props.tickerSize}
-							onChange={this.setNum('tickerSize')}
-							min={1}
-							max={10}
-						/>
-					</Well>
-				</FormGroup>
-			</div>
+						<FormGroup controlId='tickerSize'>
+							<ControlLabel>Ticker Size</ControlLabel>
+
+							<Well bsStyle='row'>
+								<FormControl
+									type='number'
+									value={this.props.tickerSize}
+									onChange={this.setNum('tickerSize')}
+									min={1}
+									max={10}
+								/>
+							</Well>
+						</FormGroup>
+					</div>
+				</Modal.Body>
+
+				<Modal.Footer>
+					<Button
+						bsStyle='primary'
+						onClick={this.props.onHide}
+					>Close</Button>
+				</Modal.Footer>
+			</Modal>
 		)
 	}
 }
