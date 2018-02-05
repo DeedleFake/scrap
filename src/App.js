@@ -6,7 +6,9 @@ import Ticker from './Ticker'
 import CoinList from './CoinList'
 import Add from './Add'
 import Settings from './Settings'
-import utils from './utils'
+
+import Portfolio from './Portfolio'
+import util from './util'
 
 const Configstore = window.require('configstore')
 
@@ -75,20 +77,23 @@ class App extends Component {
 
 	loadPortfolio = async () => {
 		try {
-			let data = await utils.readFile(this.state.portfolioLocation)
+			let data = await util.readFile(this.state.portfolioLocation)
 			this.setState({
-				portfolio: JSON.parse(data),
+				portfolio: new Portfolio(JSON.parse(data)),
 			})
 		}
 		catch (err) {
 			// TODO: Show an error to the user?
 			console.error(`Failed to load portfolio: ${err}`)
+			this.setState({
+				portfolio: new Portfolio(),
+			})
 		}
 	}
 
 	savePortfolio = async () => {
 		try {
-			await utils.writeFile(this.state.portfolioLocation, JSON.stringify(this.state.portfolio))
+			await util.writeFile(this.state.portfolioLocation, JSON.stringify(this.state.portfolio))
 		}
 		catch (err) {
 			// TODO: Show an error to the user.
