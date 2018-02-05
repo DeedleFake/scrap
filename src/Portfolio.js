@@ -5,7 +5,7 @@ class Portfolio {
 		})
 	}
 
-	empty = () => !this.length
+	empty = () => !Object.keys(this.coins).length
 
 	add = (id, purchase) => {
 		if (!this.coins[id]) {
