@@ -77,3 +77,30 @@
 	display: flex;
 	flex-direction: row;
 }
+
+.well-row > *
+{
+	margin-left: 4px;
+}
+
+.well-row > *:first-child
+{
+	margin-left: 0px;
+}
+
+.well-column
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.well-column > *
+{
+	margin-top: 4px;
+}
+
+.well-column > *:first-child
+{
+	margin-top: 0px;
+}

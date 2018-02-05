@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, ButtonGroup, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
 class Add extends Component {
 	valid = () => false
@@ -16,7 +16,53 @@ class Add extends Component {
 				</Modal.Header>
 
 				<Modal.Body>
-					This is not implemented yet.
+					<FormGroup controlId='bought'>
+						<ControlLabel>Bought</ControlLabel>
+
+						<Well bsStyle='column'>
+							<ButtonGroup>
+								<Button>Fiat</Button>
+								<Button>Crypto</Button>
+							</ButtonGroup>
+
+							<FormControl
+								type='text'
+								placeholder='Coin...'
+							/>
+						</Well>
+					</FormGroup>
+
+					<FormGroup controlId='with'>
+						<ControlLabel>With</ControlLabel>
+
+						<Well bsStyle='column'>
+							<ButtonGroup>
+								<Button>Fiat</Button>
+								<Button>Crypto</Button>
+							</ButtonGroup>
+
+							<FormControl
+								type='text'
+								placeholder='Coin...'
+							/>
+						</Well>
+					</FormGroup>
+
+					<FormGroup controlId='date'>
+						<ControlLabel>Date</ControlLabel>
+
+						<FormControl
+							type='date'
+						/>
+					</FormGroup>
+
+					<FormGroup controlId='notes'>
+						<ControlLabel>Notes</ControlLabel>
+
+						<FormControl
+							componentClass='textarea'
+						/>
+					</FormGroup>
 				</Modal.Body>
 
 				<Modal.Footer>
