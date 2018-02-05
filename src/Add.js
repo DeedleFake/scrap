@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { Modal, Button, ButtonGroup, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
+import cmc from './coinmarketcap'
+
 class Add extends Component {
 	state = {
+		valid: false,
+
 		bought: 'crypto',
 		boughtID: '',
 		boughtAmount: 0,
@@ -10,6 +14,20 @@ class Add extends Component {
 		with: 'fiat',
 		withID: '',
 		withAmount: 0,
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		let notValid = false
+		for (let [k, v] of Object.entries(this.state)) {
+			if ((v !== prevState[k]) && (k !== 'valid')) {
+				notValid = true
+				break
+			}
+		}
+
+		if (notValid) {
+			this.validate()
+		}
 	}
 
 	setVal = (k, f) => (ev) => {
@@ -22,7 +40,31 @@ class Add extends Component {
 		this.setState(obj)
 	}
 
-	valid = () => false
+	validate = async () => {
+		try {
+			let check = []
+
+			if (this.state.bought === 'crypto') {
+				check.push(cmc.getTicker(this.state.boughtID))
+			}
+
+			if (this.state.with === 'crypto') {
+				check.push(cmc.getTicker(this.state.withID))
+			}
+
+			await Promise.all(check)
+
+			this.setState({
+				valid: true,
+			})
+		}
+		catch (err) {
+			console.error(`Failed to validate: ${err}`)
+			this.setState({
+				valid: false,
+			})
+		}
+	}
 
 	add = () => {
 		throw new Error('Not implemented.')
@@ -99,6 +141,7 @@ class Add extends Component {
 										<FormControl
 											type='number'
 											value={this.state.boughtAmount}
+											min={0}
 											onChange={this.setVal('boughtAmount', parseFloat)}
 											placeholder='Amount...'
 										/>
@@ -144,6 +187,7 @@ class Add extends Component {
 										<FormControl
 											type='number'
 											value={this.state.withAmount}
+											min={0}
 											onChange={this.setVal('withAmount', parseFloat)}
 										/>
 									</div>
@@ -173,7 +217,7 @@ class Add extends Component {
 					<Button
 						bsStyle='primary'
 						onClick={this.add}
-						disabled={!this.valid()}
+						disabled={!this.state.valid}
 					>Add</Button>
 					<Button
 						bsStyle='danger'

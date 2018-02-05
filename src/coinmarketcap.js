@@ -1,4 +1,4 @@
-import http from 'http'
+import util from './util'
 
 const parseFields = (struct) => {
 	for (let [k, v] of Object.entries(struct)) {
@@ -16,26 +16,25 @@ const getCoinURL = (coin) => `https://coinmarketcap.com/currencies/${coin}`
 
 const getImageURL = (coin) => `https://files.coinmarketcap.com/static/img/coins/32x32/${coin}.png`
 
-const getTicker = async (options) => {
-	const q = Object.entries(options).map(([k, v]) => (
-		`${encodeURIComponent(k)}=${encodeURIComponent(v)}`
-	)).join('&')
+const getTicker = async (coin, options) => {
+	if (typeof(coin) !== 'string') {
+		options = coin
+		coin = ''
+	}
 
-	return await new Promise((resolve, reject) => {
-		http.get(`https://api.coinmarketcap.com/v1/ticker?${q}`, (res) => {
-			let data = ''
-			res.on('data', (part) => data += part)
-			res.on('end', () => {
-				let json = JSON.parse(data)
-				for (let i = 0; i < json.length; i++) {
-					json[i] = parseFields(json[i])
-				}
+	const q = options ? util.buildQuery(options) : ''
+	let data = await util.get(`https://api.coinmarketcap.com/v1/ticker/${coin}?${q}`)
 
-				resolve(json)
-			})
-			res.on('error', (err) => reject(err))
-		})
-	})
+	data = JSON.parse(data)
+	if (data.error) {
+		throw new Error(data.error)
+	}
+
+	for (let i = 0; i < data.length; i++) {
+		data[i] = parseFields(data[i])
+	}
+
+	return data
 }
 
 export default {

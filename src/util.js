@@ -1,3 +1,5 @@
+import http from 'http'
+
 const fs = window.require('fs')
 
 export default {
@@ -24,4 +26,17 @@ export default {
 			})
 		})
 	},
+
+	buildQuery: (options) => Object.entries(options).map(([k, v]) => (
+		`${encodeURIComponent(k)}=${encodeURIComponent(v)}`
+	)).join('&'),
+
+	get: async (url) => await new Promise((resolve, reject) => {
+		http.get(url, (res) => {
+			let data = ''
+			res.on('data', (part) => data += part)
+			res.on('end', () => resolve(data))
+			res.on('error', (err) => reject(err))
+		})
+	}),
 }
