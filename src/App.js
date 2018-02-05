@@ -8,6 +8,7 @@ import Add from './Add'
 import Settings from './Settings'
 
 import Portfolio from './Portfolio'
+import cmc from './coinmarketcap'
 import util from './util'
 
 const Configstore = window.require('configstore')
@@ -22,7 +23,7 @@ class App extends Component {
 		lastUpdate: new Date(),
 		modal: null,
 
-		prices: {},
+		coinData: null,
 		portfolio: null,
 	}
 
@@ -33,12 +34,12 @@ class App extends Component {
 		}
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		if (!this.updateInterval) {
 			this.updateInterval = setInterval(this.update, 30000)
 		}
-		this.update()
-		this.loadPortfolio()
+		await this.loadPortfolio()
+		await this.update()
 	}
 
 	componentWillUnmount() {
@@ -52,9 +53,29 @@ class App extends Component {
 		}
 	}
 
-	update = async () => {
+	update = async (portfolio) => {
+		if (!portfolio) {
+			portfolio = this.state.portfolio
+		}
+
+		let coinData = (await Promise.all(Object.keys(portfolio.coins).map(async (id) => (
+			id !== 'fiat' ? (await cmc.getTicker(id))[0] : null
+		)))).reduce((obj, cur) => {
+			if (cur.id === 'fiat') {
+				return obj
+			}
+
+			obj[cur.id] = {
+				name: cur.name,
+				usd: parseFloat(cur.price_usd),
+				btc: parseFloat(cur.price_btc),
+			}
+			return obj
+		}, {})
+
 		this.setState({
 			lastUpdate: new Date(),
+			coinData: coinData,
 		})
 	}
 
@@ -91,18 +112,25 @@ class App extends Component {
 		}
 	}
 
-	savePortfolio = async () => {
-		await util.writeFile(this.state.portfolioLocation, JSON.stringify(this.state.portfolio))
+	savePortfolio = async (portfolio) => {
+		if (!portfolio) {
+			portfolio = this.state.portfolio
+		}
+
+		await util.writeFile(this.state.portfolioLocation, JSON.stringify(portfolio, null, '\t'))
 	}
 
 	add = async (coin, purchase) => {
 		let portfolio = new Portfolio(this.state.portfolio)
 		portfolio.add(coin, purchase)
 
+		await Promise.all([
+			this.savePortfolio(portfolio),
+			this.update(portfolio),
+		])
 		this.setState({
 			portfolio: portfolio,
 		})
-		await this.savePortfolio()
 
 		this.hideModal()
 	}
@@ -113,7 +141,7 @@ class App extends Component {
 				<div className='toolbar'>
 					<div className='left'>
 						<Total
-							prices={this.state.prices}
+							data={this.state.coinData}
 							portfolio={this.state.portfolio}
 						/>
 					</div>
@@ -144,7 +172,7 @@ class App extends Component {
 								No portfolio location chosen. Please do so in Settings.
 							</Alert>
 						: <CoinList
-								prices={this.state.prices}
+								data={this.state.coinData}
 								portfolio={this.state.portfolio}
 							/>
 					}

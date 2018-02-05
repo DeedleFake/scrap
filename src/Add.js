@@ -118,7 +118,7 @@ class Add extends Component {
 
 				<Modal.Body>
 					<FormGroup controlId='bought'>
-						<ControlLabel>Bought</ControlLabel>
+						<ControlLabel>Bought (Total)</ControlLabel>
 
 						<Well bsStyle='column'>
 							<ButtonGroup>
@@ -156,7 +156,7 @@ class Add extends Component {
 					</FormGroup>
 
 					<FormGroup controlId='with'>
-						<ControlLabel>With (Per Coin)</ControlLabel>
+						<ControlLabel>With (Per Coin Bought)</ControlLabel>
 
 						<Well bsStyle='column'>
 							<ButtonGroup>

@@ -16,10 +16,22 @@
 
 .App .toolbar .left
 {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	font-size: 1.75em;
+}
+
+.App .toolbar .left > *
+{
+	margin-left: 4px;
 }
 
 .App .toolbar .center
 {
+	display: flex;
+	flex-direction: row;
 }
 
 .App .toolbar .right
