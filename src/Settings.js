@@ -1,36 +1,41 @@
 import React, { Component } from 'react'
 import { Modal, Button, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
+const fs = window.require('fs')
 const { dialog, getCurrentWindow } = window.require('electron').remote
 
 class Settings extends Component {
-	setNum = (k) => (v) => {
-		if (typeof(v) !== 'string') {
-			v = v.target.value
+	setVal = (k, f) => (ev) => {
+		let obj = {}
+		obj[k] = ev.target.value
+		if (f) {
+			obj[k] = f(obj[k])
 		}
 
-		let obj = {}
-		obj[k] = parseFloat(v)
-		this.props.onChange(obj)
-	}
-
-	setString = (k) => (v) => {
-		if (typeof(v) !== 'string') {
-			v = v.target.value
-		}
-
-		let obj = {}
-		obj[k] = v
 		this.props.onChange(obj)
 	}
 
 	setPortfolioLocation = (ev) => {
-		let path = dialog.showSaveDialog(getCurrentWindow())
+		let path = dialog.showSaveDialog(getCurrentWindow(), {
+			title: 'Choose portfolio location...',
+			defaultPath: fs.existsSync(this.props.portfolioLocation) ? this.props.portfolioLocation : '',
+			buttonLabel: 'Select',
+			filters: [
+				{
+					name: 'JSON',
+					extensions: [
+						'json',
+					],
+				},
+			],
+		})
 		if (!path) {
 			return
 		}
 
-		this.setString('portfolioLocation')(path)
+		this.props.onChange({
+			portfolioLocation: path,
+		})
 	}
 
 	render() {
@@ -65,7 +70,7 @@ class Settings extends Component {
 								<FormControl
 									type='number'
 									value={this.props.tickerSize}
-									onChange={this.setNum('tickerSize')}
+									onChange={this.setVal('tickerSize', parseFloat)}
 									min={1}
 									max={10}
 								/>
