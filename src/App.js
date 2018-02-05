@@ -92,13 +92,19 @@ class App extends Component {
 	}
 
 	savePortfolio = async () => {
-		try {
-			await util.writeFile(this.state.portfolioLocation, JSON.stringify(this.state.portfolio))
-		}
-		catch (err) {
-			// TODO: Show an error to the user.
-			console.error(`Failed to save portfolio: ${err}`)
-		}
+		await util.writeFile(this.state.portfolioLocation, JSON.stringify(this.state.portfolio))
+	}
+
+	add = async (coin, purchase) => {
+		let portfolio = new Portfolio(this.state.portfolio)
+		portfolio.add(coin, purchase)
+
+		this.setState({
+			portfolio: portfolio,
+		})
+		await this.savePortfolio()
+
+		this.hideModal()
 	}
 
 	render() {

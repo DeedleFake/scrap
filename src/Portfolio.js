@@ -3,6 +3,10 @@ class Portfolio {
 		Object.assign(this, obj || {
 			coins: {},
 		})
+
+		for (let k of Object.keys(this.coins)) {
+			this.coins[k] = new Portfolio.Coin(this.coins[k])
+		}
 	}
 
 	empty = () => !Object.keys(this.coins).length
@@ -17,6 +21,11 @@ class Portfolio {
 
 	static Coin = class {
 		constructor(id, purchases) {
+			if (typeof(id) === 'object') {
+				Object.assign(this, id)
+				return
+			}
+
 			Object.assign(this, {
 				id: id,
 				purchases: purchases || [],

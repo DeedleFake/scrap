@@ -2,33 +2,23 @@ import React, { Component } from 'react'
 import { Modal, Button, ButtonGroup, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
 import cmc from './coinmarketcap'
+import util from './util'
+
+const defaultState = {
+	bought: 'crypto',
+	boughtID: '',
+	boughtAmount: 0,
+
+	with: 'fiat',
+	withID: '',
+	withAmount: 0,
+
+	date: new Date(),
+	notes: '',
+}
 
 class Add extends Component {
-	state = {
-		valid: false,
-
-		bought: 'crypto',
-		boughtID: '',
-		boughtAmount: 0,
-
-		with: 'fiat',
-		withID: '',
-		withAmount: 0,
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		let notValid = false
-		for (let [k, v] of Object.entries(this.state)) {
-			if ((v !== prevState[k]) && (k !== 'valid')) {
-				notValid = true
-				break
-			}
-		}
-
-		if (notValid) {
-			this.validate()
-		}
-	}
+	state = defaultState
 
 	setVal = (k, f) => (ev) => {
 		let obj = {}
@@ -62,22 +52,26 @@ class Add extends Component {
 		}
 	}
 
-	validate = async () => {
-		// TODO: Check when Add is clicked instead, and then tell the user
-		// what's invalid.
-		this.setState({
-			valid: await this.valid(),
-		})
-	}
-
 	add = async () => {
-		// Just to make sure that nothing's changed since the last
-		// validation.
 		if (!await this.valid()) {
 			return
 		}
 
-		throw new Error('Not implemented.')
+		const id = this.state.bought === 'crypto' ? this.state.boughtID : this.state.bought
+		this.props.onAdd(id, {
+			amount: isNaN(this.state.boughtAmount) ? 0 : this.state.boughtAmount,
+
+			with: {
+				type: this.state.with,
+				id: this.state.withID,
+				amount: isNaN(this.state.withAmount) ? 0 : this.state.withAmount,
+			},
+
+			date: this.state.date,
+			notes: this.state.notes,
+		})
+
+		this.setState(defaultState)
 	}
 
 	bought = (type) => () => {
@@ -162,7 +156,7 @@ class Add extends Component {
 					</FormGroup>
 
 					<FormGroup controlId='with'>
-						<ControlLabel>With</ControlLabel>
+						<ControlLabel>With (Per Coin)</ControlLabel>
 
 						<Well bsStyle='column'>
 							<ButtonGroup>
@@ -211,6 +205,8 @@ class Add extends Component {
 
 						<FormControl
 							type='date'
+							value={util.formatDate(this.state.date)}
+							onChange={this.setVal('date', (v) => new Date(v))}
 						/>
 					</FormGroup>
 
@@ -219,6 +215,8 @@ class Add extends Component {
 
 						<FormControl
 							componentClass='textarea'
+							value={this.state.notes}
+							onChange={this.setVal('notes')}
 						/>
 					</FormGroup>
 				</Modal.Body>
@@ -227,7 +225,6 @@ class Add extends Component {
 					<Button
 						bsStyle='primary'
 						onClick={this.add}
-						disabled={!this.state.valid}
 					>Add</Button>
 					<Button
 						bsStyle='danger'
