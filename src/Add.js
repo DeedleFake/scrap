@@ -2,10 +2,27 @@ import React, { Component } from 'react'
 import { Modal, Button, ButtonGroup, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
 class Add extends Component {
+	state = {
+		bought: 'crypto',
+		with: 'fiat',
+	}
+
 	valid = () => false
 
 	add = () => {
 		throw new Error('Not implemented.')
+	}
+
+	bought = (type) => () => {
+		this.setState({
+			bought: type,
+		})
+	}
+
+	with = (type) => () => {
+		this.setState({
+			with: type,
+		})
 	}
 
 	render() {
@@ -21,8 +38,14 @@ class Add extends Component {
 
 						<Well bsStyle='column'>
 							<ButtonGroup>
-								<Button>Fiat</Button>
-								<Button>Crypto</Button>
+								<Button
+									onClick={this.bought('crypto')}
+									disabled={this.state.bought === 'crypto'}
+								>Crypto</Button>
+								<Button
+									onClick={this.bought('fiat')}
+									disabled={this.state.bought === 'fiat'}
+								>Fiat</Button>
 							</ButtonGroup>
 
 							<FormControl
@@ -37,8 +60,22 @@ class Add extends Component {
 
 						<Well bsStyle='column'>
 							<ButtonGroup>
-								<Button>Fiat</Button>
-								<Button>Crypto</Button>
+								<Button
+									onClick={this.with('crypto')}
+									disabled={this.state.with === 'crypto'}
+								>Crypto</Button>
+								<Button
+									onClick={this.with('fiat')}
+									disabled={this.state.with === 'fiat'}
+								>Fiat</Button>
+								<Button
+									onClick={this.with('mined')}
+									disabled={this.state.with === 'mined'}
+								>Mined</Button>
+								<Button
+									onClick={this.with('used')}
+									disabled={this.state.with === 'used'}
+								>Used</Button>
 							</ButtonGroup>
 
 							<FormControl
