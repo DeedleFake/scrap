@@ -40,7 +40,7 @@ class Add extends Component {
 		this.setState(obj)
 	}
 
-	validate = async () => {
+	valid = async () => {
 		try {
 			let check = []
 
@@ -54,19 +54,29 @@ class Add extends Component {
 
 			await Promise.all(check)
 
-			this.setState({
-				valid: true,
-			})
+			return true
 		}
 		catch (err) {
 			console.error(`Failed to validate: ${err}`)
-			this.setState({
-				valid: false,
-			})
+			return false
 		}
 	}
 
-	add = () => {
+	validate = async () => {
+		// TODO: Check when Add is clicked instead, and then tell the user
+		// what's invalid.
+		this.setState({
+			valid: await this.valid(),
+		})
+	}
+
+	add = async () => {
+		// Just to make sure that nothing's changed since the last
+		// validation.
+		if (!await this.valid()) {
+			return
+		}
+
 		throw new Error('Not implemented.')
 	}
 
