@@ -4,7 +4,22 @@ import { Modal, Button, ButtonGroup, FormGroup, ControlLabel, FormControl, Well 
 class Add extends Component {
 	state = {
 		bought: 'crypto',
+		boughtID: '',
+		boughtAmount: 0,
+
 		with: 'fiat',
+		withID: '',
+		withAmount: 0,
+	}
+
+	setVal = (k, f) => (ev) => {
+		let obj = {}
+		obj[k] = ev.target.value
+		if (f) {
+			obj[k] = f(obj[k])
+		}
+
+		this.setState(obj)
 	}
 
 	valid = () => false
@@ -16,13 +31,36 @@ class Add extends Component {
 	bought = (type) => () => {
 		this.setState({
 			bought: type,
+			boughtID: '',
 		})
 	}
 
 	with = (type) => () => {
 		this.setState({
 			with: type,
+			withID: '',
 		})
+	}
+
+	show = (k) => {
+		switch (this.state[k]) {
+			case 'crypto':
+			case 'fiat':
+				return true
+
+			default:
+				return false
+		}
+	}
+
+	placeholder = (k) => {
+		switch (this.state[k]) {
+			case 'crypto':
+				return 'Coin...'
+
+			default:
+				return null
+		}
 	}
 
 	render() {
@@ -48,10 +86,25 @@ class Add extends Component {
 								>Fiat</Button>
 							</ButtonGroup>
 
-							<FormControl
-								type='text'
-								placeholder='Coin...'
-							/>
+							{this.show('bought')
+								? <div className='flex-row'>
+										<FormControl
+											type='text'
+											value={this.state.boughtID}
+											onChange={this.setVal('boughtID')}
+											placeholder={this.placeholder('bought')}
+											disabled={!this.placeholder('bought')}
+										/>
+
+										<FormControl
+											type='number'
+											value={this.state.boughtAmount}
+											onChange={this.setVal('boughtAmount', parseFloat)}
+											placeholder='Amount...'
+										/>
+									</div>
+								: null
+							}
 						</Well>
 					</FormGroup>
 
@@ -78,10 +131,24 @@ class Add extends Component {
 								>Used</Button>
 							</ButtonGroup>
 
-							<FormControl
-								type='text'
-								placeholder='Coin...'
-							/>
+							{this.show('with')
+								? <div className='flex-row'>
+										<FormControl
+											type='text'
+											value={this.state.withID}
+											onChange={this.setVal('withID')}
+											placeholder={this.placeholder('with')}
+											disabled={!this.placeholder('with')}
+										/>
+
+										<FormControl
+											type='number'
+											value={this.state.withAmount}
+											onChange={this.setVal('withAmount', parseFloat)}
+										/>
+									</div>
+								: null
+							}
 						</Well>
 					</FormGroup>
 
