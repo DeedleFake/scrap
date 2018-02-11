@@ -6,6 +6,7 @@ import Ticker from './Ticker'
 import CoinList from './CoinList'
 import Add from './Add'
 import Settings from './Settings'
+import Coin from './Coin'
 
 import util from './util'
 
@@ -27,9 +28,9 @@ class App extends Component {
 		await this.props.updatePrices()
 	}
 
-	showModal = (name) => {
+	showModal = (name, ...args) => {
 		this.setState({
-			modal: name,
+			modal: {name, args},
 		})
 	}
 
@@ -38,6 +39,8 @@ class App extends Component {
 			modal: null,
 		})
 	}
+
+	modalShown = (name) => this.state.modal && (this.state.modal.name === name)
 
 	savePortfolio = async () => {
 		await util.writeFile(this.props.portfolioLocation, util.toJSON(this.props.portfolio))
@@ -87,20 +90,29 @@ class App extends Component {
 						? <Alert bsStyle='danger'>
 								No portfolio location chosen. Please do so in Settings.
 							</Alert>
-						: <CoinList />
+						: <CoinList
+								showCoin={(coin) => this.showModal('coin', coin)}
+							/>
 					}
 				</div>
 
 				<Add
-					show={this.state.modal === 'add'}
+					show={this.modalShown('add')}
 					onHide={this.hideModal}
 
 					onAdd={this.add}
 				/>
 
 				<Settings
-					show={this.state.modal === 'settings'}
+					show={this.modalShown('settings')}
 					onHide={this.hideModal}
+				/>
+
+				<Coin
+					show={this.modalShown('coin')}
+					onHide={this.hideModal}
+
+					coin={this.state.modal && this.state.modal.coin}
 				/>
 			</div>
 		)

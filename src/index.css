@@ -83,6 +83,13 @@
 	margin: 4px;
 }
 
+.CoinList .Item
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 .well-row
 {
 	display: flex;
