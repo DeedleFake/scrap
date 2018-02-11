@@ -170,14 +170,17 @@ class Add extends Component {
 									onClick={this.with('fiat')}
 									disabled={this.state.with === 'fiat'}
 								>Fiat</Button>
-								<Button
+								<Button onClick={this.with('received')}
+									disabled={this.state.with === 'received'}
+								>Received</Button>
+								{/*<Button
 									onClick={this.with('mined')}
 									disabled={this.state.with === 'mined'}
 								>Mined</Button>
 								<Button
 									onClick={this.with('used')}
 									disabled={this.state.with === 'used'}
-								>Used</Button>
+								>Used</Button>*/}
 							</ButtonGroup>
 
 							{this.show('with')

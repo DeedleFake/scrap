@@ -20,9 +20,16 @@ class Total extends Component {
 						return acc
 					}
 
-					acc += (cur.to.amount * this.props.prices[cur.to.id].usd)
-					acc -= (cur.from.amount * cur.to.amount * this.props.prices[cur.from.id].usd)
+					acc += cur.to.amount * this.props.prices[cur.to.id].usd
+					acc -= cur.from.amount * cur.to.amount * this.props.prices[cur.from.id].usd
 					return acc
+
+				case 'received':
+					if (!this.props.prices[cur.to.id]) {
+						return acc
+					}
+
+					return acc + (cur.to.amount * this.props.prices[cur.to.id].usd)
 
 				default:
 					throw new Error(`Unsupported purchase type: ${cur.from.type}`)
