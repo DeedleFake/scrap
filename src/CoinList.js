@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Alert, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { Alert, ListGroup, ListGroupItem, Media } from 'react-bootstrap'
 
 import CoinBadge from './CoinBadge'
 
 import { connect } from 'react-redux'
 
 class CoinList extends Component {
+	name = (id) => this.props.prices[id] ? this.props.prices[id].name : null
+
 	price = (id) => this.props.prices[id] ? this.props.prices[id].usd : -1
 
 	render() {
@@ -22,17 +24,18 @@ class CoinList extends Component {
 				<ListGroup>
 					{[...this.props.coins].map((coin) => (
 						<ListGroupItem key={coin} onClick={() => this.props.showCoin(coin)}>
-							<div className='Item'>
-								<div className='left'>
+							<Media>
+								<Media.Left align='middle'>
 									<CoinBadge
 										id={coin}
 										price={this.price(coin)}
 									/>
-								</div>
+								</Media.Left>
 
-								<div className='right'>
-								</div>
-							</div>
+								<Media.Right>
+									<Media.Heading>{this.name(coin)}</Media.Heading>
+								</Media.Right>
+							</Media>
 						</ListGroupItem>
 					))}
 				</ListGroup>
