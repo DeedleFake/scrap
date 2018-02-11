@@ -27,14 +27,20 @@ app.on('ready', () => {
 		url = process.env.ELECTRON_START_URL
 
 		const install = async () => {
-			const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
+			const { default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer')
+			const ext = [
+				REACT_DEVELOPER_TOOLS,
+				REDUX_DEVTOOLS,
+			]
 
-			try {
-				let name = await installExtension(REACT_DEVELOPER_TOOLS)
-				console.log(`Added Extension: ${name}`)
-			}
-			catch (err) {
-				console.error(`Failed to add extension: ${err}`)
+			for (let e of ext) {
+				try {
+					let name = await installExtension(e)
+					console.log(`Added Extension: ${name}`)
+				}
+				catch (err) {
+					console.error(`Failed to add extension: ${err}`)
+				}
 			}
 		}
 		install().catch(console.error)
