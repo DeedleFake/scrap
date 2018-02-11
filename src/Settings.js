@@ -63,7 +63,7 @@ class Settings extends Component {
 							</Well>
 						</FormGroup>
 
-						<FormGroup controlId='tickerSize'>
+						{/*<FormGroup controlId='tickerSize'>
 							<ControlLabel>Ticker Size</ControlLabel>
 
 							<Well bsStyle='row'>
@@ -75,7 +75,7 @@ class Settings extends Component {
 									max={10}
 								/>
 							</Well>
-						</FormGroup>
+						</FormGroup>*/}
 					</div>
 				</Modal.Body>
 

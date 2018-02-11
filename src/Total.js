@@ -2,42 +2,32 @@ import React, { Component } from 'react'
 
 class Total extends Component {
 	calc = () => {
-		if (!this.props.portfolio) {
+		if (!Object.keys(this.props.prices).length) {
 			return 0
 		}
 
-		let sum = 0
-		for (let [id, coin] of Object.entries(this.props.portfolio.coins)) {
-			for (let purchase of coin.purchases) {
-				try {
-					switch (purchase.with.type) {
-						case 'fiat':
-							sum += purchase.amount * purchase.with.amount
-							break
-
-						case 'crypto':
-							sum += purchase.amount * this.props.data[id].usd
-							sum -= purchase.with.amount * this.props.data[purchase.with.id].usd
-							break
-
-						case 'mined':
-							sum += purchase.amount * this.props.data[id].usd
-							break
-
-						case 'used':
-							throw new Error('Not implemented.')
-
-						default:
-							throw new Error(`Unexpected purchase type: ${purchase.with.type}`)
+		return this.props.purchases.reduce((acc, cur) => {
+			switch (cur.from.type) {
+				case 'fiat':
+					if (!this.props.prices[cur.to.id]) {
+						return acc
 					}
-				}
-				catch (err) {
-					console.error(`Failed to add purchase: ${err}`)
-				}
-			}
-		}
 
-		return sum
+					return acc + (cur.to.amount * this.props.prices[cur.to.id].usd)
+
+				case 'crypto':
+					if (!this.props.prices[cur.from.id] || !this.props.prices[cur.to.id]) {
+						return acc
+					}
+
+					acc += (cur.to.amount * this.props.prices[cur.to.id].usd)
+					acc -= (cur.from.amount * cur.to.amount * this.props.prices[cur.from.id].usd)
+					return acc
+
+				default:
+					throw new Error(`Unsupported purchase type: ${cur.from.type}`)
+			}
+		}, 0)
 	}
 
 	render() {

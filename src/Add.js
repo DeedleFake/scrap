@@ -57,14 +57,17 @@ class Add extends Component {
 			return
 		}
 
-		const id = this.state.bought === 'crypto' ? this.state.boughtID : this.state.bought
-		this.props.onAdd(id, {
-			amount: isNaN(this.state.boughtAmount) ? 0 : this.state.boughtAmount,
-
-			with: {
+		this.props.onAdd({
+			from: {
 				type: this.state.with,
 				id: this.state.withID,
-				amount: isNaN(this.state.withAmount) ? 0 : this.state.withAmount,
+				amount: this.state.withAmount,
+			},
+
+			to: {
+				type: this.state.bought,
+				id: this.state.boughtID,
+				amount: this.state.boughtAmount,
 			},
 
 			date: this.state.date,
@@ -121,7 +124,7 @@ class Add extends Component {
 						<ControlLabel>Bought (Total)</ControlLabel>
 
 						<Well bsStyle='column'>
-							<ButtonGroup>
+							{/*<ButtonGroup>
 								<Button
 									onClick={this.bought('crypto')}
 									disabled={this.state.bought === 'crypto'}
@@ -130,7 +133,7 @@ class Add extends Component {
 									onClick={this.bought('fiat')}
 									disabled={this.state.bought === 'fiat'}
 								>Fiat</Button>
-							</ButtonGroup>
+							</ButtonGroup>*/}
 
 							{this.show('bought')
 								? <div className='flex-row'>
@@ -145,7 +148,6 @@ class Add extends Component {
 										<FormControl
 											type='number'
 											value={this.state.boughtAmount}
-											min={0}
 											onChange={this.setVal('boughtAmount', parseFloat)}
 											placeholder='Amount...'
 										/>

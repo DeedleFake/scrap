@@ -41,4 +41,35 @@ export default {
 	}),
 
 	formatDate: (date) => `${date.getFullYear()}-${date.getMonth() < 10 ? '0' : ''}${date.getMonth()}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`,
+
+	toJSON: (data) => {
+		const replacer = (k, v) => {
+			if (v instanceof Set) {
+				return {
+					jsontype: 'set',
+					val: [...v],
+				}
+			}
+
+			return v
+		}
+
+		return JSON.stringify(data, replacer, '\t')
+	},
+
+	fromJSON: (data) => {
+		const reviver = (k, v) => {
+			switch (v.jsontype) {
+				case 'set':
+					return new Set(v.val)
+
+				default:
+					break
+			}
+
+			return v
+		}
+
+		return JSON.parse(data, reviver)
+	},
 }

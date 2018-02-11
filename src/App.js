@@ -7,9 +7,15 @@ import CoinList from './CoinList'
 import Add from './Add'
 import Settings from './Settings'
 
-import Portfolio from './Portfolio'
-import cmc from './coinmarketcap'
 import util from './util'
+
+import { connect } from 'react-redux'
+import {
+	addPurchase,
+	setPortfolio,
+
+	updatePrices,
+} from './store'
 
 const Configstore = window.require('configstore')
 
@@ -20,11 +26,7 @@ const defaultSettings = {
 
 class App extends Component {
 	state = {
-		lastUpdate: new Date(),
 		modal: null,
-
-		coinData: null,
-		portfolio: null,
 	}
 
 	componentWillMount() {
@@ -35,48 +37,14 @@ class App extends Component {
 	}
 
 	async componentDidMount() {
-		if (!this.updateInterval) {
-			this.updateInterval = setInterval(this.update, 30000)
-		}
 		await this.loadPortfolio()
-		await this.update()
-	}
-
-	componentWillUnmount() {
-		clearInterval(this.updateInterval)
-		this.updateInterval = null
+		await this.props.updatePrices()
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.state.portfolioLocation !== prevState.portfolioLocation) {
 			this.loadPortfolio()
 		}
-	}
-
-	update = async (portfolio) => {
-		if (!portfolio) {
-			portfolio = this.state.portfolio
-		}
-
-		let coinData = (await Promise.all(Object.keys(portfolio.coins).map(async (id) => (
-			id !== 'fiat' ? (await cmc.getTicker(id))[0] : null
-		)))).reduce((obj, cur) => {
-			if (cur.id === 'fiat') {
-				return obj
-			}
-
-			obj[cur.id] = {
-				name: cur.name,
-				usd: parseFloat(cur.price_usd),
-				btc: parseFloat(cur.price_btc),
-			}
-			return obj
-		}, {})
-
-		this.setState({
-			lastUpdate: new Date(),
-			coinData: coinData,
-		})
 	}
 
 	setSettings = (obj) => {
@@ -99,38 +67,24 @@ class App extends Component {
 	loadPortfolio = async () => {
 		try {
 			let data = await util.readFile(this.state.portfolioLocation)
-			this.setState({
-				portfolio: new Portfolio(JSON.parse(data)),
-			})
+			this.props.setPortfolio(util.fromJSON(data))
 		}
 		catch (err) {
 			// TODO: Show an error to the user?
 			console.error(`Failed to load portfolio: ${err}`)
-			this.setState({
-				portfolio: new Portfolio(),
-			})
 		}
 	}
 
-	savePortfolio = async (portfolio) => {
-		if (!portfolio) {
-			portfolio = this.state.portfolio
-		}
-
-		await util.writeFile(this.state.portfolioLocation, JSON.stringify(portfolio, null, '\t'))
+	savePortfolio = async () => {
+		await util.writeFile(this.state.portfolioLocation, util.toJSON(this.props.portfolio))
 	}
 
-	add = async (coin, purchase) => {
-		let portfolio = new Portfolio(this.state.portfolio)
-		portfolio.add(coin, purchase)
-
+	add = async ({from, to, date, notes}) => {
+		this.props.addPurchase({from, to, date, notes})
 		await Promise.all([
-			this.savePortfolio(portfolio),
-			this.update(portfolio),
+			this.savePortfolio(),
+			this.props.updatePrices(),
 		])
-		this.setState({
-			portfolio: portfolio,
-		})
 
 		this.hideModal()
 	}
@@ -141,16 +95,16 @@ class App extends Component {
 				<div className='toolbar'>
 					<div className='left'>
 						<Total
-							data={this.state.coinData}
-							portfolio={this.state.portfolio}
+							prices={this.props.prices}
+							purchases={this.props.portfolio.purchases}
 						/>
 					</div>
 
-					<Ticker
+					{/*<Ticker
 						className='center'
 						lastUpdate={this.state.lastUpdate}
 						limit={this.state.tickerSize}
-					/>
+					/>*/}
 
 					<div className='right'>
 						<Button
@@ -171,10 +125,7 @@ class App extends Component {
 						? <Alert bsStyle='danger'>
 								No portfolio location chosen. Please do so in Settings.
 							</Alert>
-						: <CoinList
-								data={this.state.coinData}
-								portfolio={this.state.portfolio}
-							/>
+						: <CoinList />
 					}
 				</div>
 
@@ -197,4 +148,17 @@ class App extends Component {
 	}
 }
 
-export default App
+export default connect(
+	(state) => ({
+		portfolio: state.portfolio,
+
+		prices: state.prices,
+	}),
+
+	{
+		addPurchase,
+		setPortfolio,
+
+		updatePrices,
+	},
+)(App)

@@ -1,11 +1,17 @@
 const ADD_PURCHASE = 'ADD_PURCHASE'
-export const addPurchase = (from, to, date, notes) => ({
+export const addPurchase = ({from, to, date, notes}) => ({
 	type: ADD_PURCHASE,
 
 	from,
 	to,
 	date,
 	notes,
+})
+
+const SET_PORTFOLIO = 'SET_PORTFOLIO'
+export const setPortfolio = (portfolio) => ({
+	type: SET_PORTFOLIO,
+	portfolio,
 })
 
 const initial = {
@@ -39,6 +45,9 @@ export default (state = initial, action) => {
 				}, new Set()),
 				purchases: p,
 			}
+
+		case SET_PORTFOLIO:
+			return action.portfolio
 
 		default:
 			return state
