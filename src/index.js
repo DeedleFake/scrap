@@ -3,11 +3,16 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
 import App from './App'
-import store, { updatePrices } from './store'
+import store, { updatePrices, updateTicker } from './store'
 
 import './index.css'
 
-setInterval(() => store.dispatch(updatePrices()), 30000)
+const update = () => {
+	store.dispatch(updatePrices())
+	store.dispatch(updateTicker())
+}
+setInterval(update, 30000)
+update()
 
 ReactDOM.render((
 	<Provider store={store}>

@@ -100,11 +100,9 @@ class App extends Component {
 						/>
 					</div>
 
-					{/*<Ticker
-						className='center'
-						lastUpdate={this.state.lastUpdate}
-						limit={this.state.tickerSize}
-					/>*/}
+					<div className='center'>
+						<Ticker />
+					</div>
 
 					<div className='right'>
 						<Button

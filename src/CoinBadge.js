@@ -20,12 +20,12 @@ class CoinBadge extends Component {
 			>
 				<Image
 					className='Image'
-					alt={this.props.coin.id}
-					src={cmc.getImageURL(this.props.coin.id)}
+					alt={this.props.id}
+					src={cmc.getImageURL(this.props.id)}
 					responsive={true}
 				/>
 				<Price
-					price={this.props.coin.price_usd}
+					price={this.props.price}
 					format={'USD'}
 				/>
 			</a>
