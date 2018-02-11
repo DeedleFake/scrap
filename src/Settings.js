@@ -1,21 +1,28 @@
 import React, { Component } from 'react'
 import { Modal, Button, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
 
+import { connect } from 'react-redux'
+import {
+	loadPortfolio,
+	clearPortfolio,
+
+	setSetting,
+
+	updateTicker,
+} from './store'
+
 const fs = window.require('fs')
 const { dialog, getCurrentWindow } = window.require('electron').remote
 
 class Settings extends Component {
-	setVal = (k, f) => (ev) => {
-		let obj = {}
-		obj[k] = ev.target.value
-		if (f) {
-			obj[k] = f(obj[k])
+	setVal = (k, f, after) => (ev) => {
+		this.props.setSetting(k, ((f || ((v) => v))(ev.target.value)))
+		if (after) {
+			after()
 		}
-
-		this.props.onChange(obj)
 	}
 
-	setPortfolioLocation = (ev) => {
+	setPortfolioLocation = async (ev) => {
 		let path = dialog.showSaveDialog(getCurrentWindow(), {
 			title: 'Choose portfolio location...',
 			defaultPath: fs.existsSync(this.props.portfolioLocation) ? this.props.portfolioLocation : '',
@@ -33,9 +40,14 @@ class Settings extends Component {
 			return
 		}
 
-		this.props.onChange({
-			portfolioLocation: path,
-		})
+		this.props.setSetting('portfolioLocation', path)
+		try {
+			await this.props.loadPortfolio()
+		}
+		catch (err) {
+			console.error(`Failed to load portfolio: ${err}`)
+			this.props.clearPortfolio()
+		}
 	}
 
 	render() {
@@ -63,19 +75,19 @@ class Settings extends Component {
 							</Well>
 						</FormGroup>
 
-						{/*<FormGroup controlId='tickerSize'>
+						<FormGroup controlId='tickerSize'>
 							<ControlLabel>Ticker Size</ControlLabel>
 
 							<Well bsStyle='row'>
 								<FormControl
 									type='number'
 									value={this.props.tickerSize}
-									onChange={this.setVal('tickerSize', parseFloat)}
+									onChange={this.setVal('tickerSize', parseFloat, this.props.updateTicker)}
 									min={1}
 									max={10}
 								/>
 							</Well>
-						</FormGroup>*/}
+						</FormGroup>
 					</div>
 				</Modal.Body>
 
@@ -90,4 +102,18 @@ class Settings extends Component {
 	}
 }
 
-export default Settings
+export default connect(
+	(state) => ({
+		portfolioLocation: state.settings.portfolioLocation,
+		tickerSize: state.settings.tickerSize,
+	}),
+
+	{
+		loadPortfolio,
+		clearPortfolio,
+
+		setSetting,
+
+		updateTicker,
+	},
+)(Settings)

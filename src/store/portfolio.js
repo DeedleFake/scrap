@@ -1,3 +1,5 @@
+import util from '../util'
+
 const ADD_PURCHASE = 'ADD_PURCHASE'
 export const addPurchase = ({from, to, date, notes}) => ({
 	type: ADD_PURCHASE,
@@ -8,10 +10,18 @@ export const addPurchase = ({from, to, date, notes}) => ({
 	notes,
 })
 
-const SET_PORTFOLIO = 'SET_PORTFOLIO'
-export const setPortfolio = (portfolio) => ({
-	type: SET_PORTFOLIO,
-	portfolio,
+const LOAD_PORTFOLIO = 'LOAD_PORTFOLIO'
+export const loadPortfolio = () => async ({state, dispatch}) => {
+	let portfolio = await util.readFile(state.settings.portfolioLocation)
+	return dispatch({
+		type: LOAD_PORTFOLIO,
+		portfolio: util.fromJSON(portfolio),
+	})
+}
+
+const CLEAR_PORTFOLIO = 'CLEAR_PORTFOLIO'
+export const clearPortfolio = () => ({
+	type: CLEAR_PORTFOLIO,
 })
 
 const initial = {
@@ -46,8 +56,11 @@ export default (state = initial, action) => {
 				purchases: p,
 			}
 
-		case SET_PORTFOLIO:
+		case LOAD_PORTFOLIO:
 			return action.portfolio
+
+		case CLEAR_PORTFOLIO:
+			return initial
 
 		default:
 			return state
