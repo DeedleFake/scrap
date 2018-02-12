@@ -12,6 +12,7 @@ export const updatePrices = () => async ({state, dispatch}) => {
 		prices: data.reduce((acc, cur) => {
 			acc[cur.id] = {
 				name: cur.name,
+				symbol: cur.symbol,
 				usd: parseFloat(cur.price_usd),
 				btc: parseFloat(cur.price_btc),
 			}

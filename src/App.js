@@ -20,7 +20,10 @@ import {
 
 class App extends Component {
 	state = {
-		modal: null,
+		modal: {
+			name: null,
+			args: [],
+		},
 	}
 
 	async componentDidMount() {
@@ -36,11 +39,14 @@ class App extends Component {
 
 	hideModal = () => {
 		this.setState({
-			modal: null,
+			modal: {
+				name: null,
+				args: [],
+			},
 		})
 	}
 
-	modalShown = (name) => this.state.modal && (this.state.modal.name === name)
+	modalShown = (name) => this.state.modal.name === name
 
 	savePortfolio = async () => {
 		await util.writeFile(this.props.portfolioLocation, util.toJSON(this.props.portfolio))
@@ -112,7 +118,7 @@ class App extends Component {
 					show={this.modalShown('coin')}
 					onHide={this.hideModal}
 
-					coin={this.state.modal && this.state.modal.coin}
+					coin={this.state.modal.args[0]}
 				/>
 			</div>
 		)

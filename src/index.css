@@ -83,6 +83,32 @@
 	margin: 4px;
 }
 
+.CoinList .Item
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.CoinList .Item .name
+{
+	font-size: 2em;
+}
+
+.CoinList .Item .owned, .CoinList .Item .value
+{
+	display: flex;
+	flex-direction: row;
+
+	font-size: 1.5em;
+}
+
+.CoinList .Item .owned > *, .CoinList .Item .value > *
+{
+	margin-left: 4px;
+}
+
 .well-row
 {
 	display: flex;
