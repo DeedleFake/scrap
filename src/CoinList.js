@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Alert, ListGroup, ListGroupItem, Media } from 'react-bootstrap'
 
 import CoinBadge from './CoinBadge'
+import Total from './Total'
 
 import { connect } from 'react-redux'
 
@@ -34,6 +35,22 @@ class CoinList extends Component {
 
 								<Media.Right>
 									<Media.Heading>{this.name(coin)}</Media.Heading>
+
+									Owned:
+									<Total
+										owned
+										prices={this.props.prices}
+										purchases={this.props.purchases}
+										filter={(c) => c.id === coin}
+									/>
+
+									Value:
+									<Total
+										value
+										prices={this.props.prices}
+										purchases={this.props.purchases}
+										filter={(c) => c.id === coin}
+									/>
 								</Media.Right>
 							</Media>
 						</ListGroupItem>
@@ -47,6 +64,7 @@ class CoinList extends Component {
 export default connect(
 	(state) => ({
 		coins: state.portfolio.coins,
+		purchases: state.portfolio.purchases,
 
 		prices: state.prices,
 	}),

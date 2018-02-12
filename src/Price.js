@@ -6,10 +6,13 @@ class Price extends Component {
 
 		return (
 			<span>
-				{this.props.price.toLocaleString('en-US', {
-					style: 'currency',
-					currency: format,
-				})}
+				{this.props.fiat
+					? this.props.price.toLocaleString('en-US', {
+							style: 'currency',
+							currency: format,
+						})
+					: this.props.price.toLocaleString('en-US')
+				}
 			</span>
 		)
 	}
