@@ -1,8 +1,19 @@
 import React, { Component } from 'react'
-import { Modal, Button, ButtonGroup, FormGroup, ControlLabel, FormControl, Well } from 'react-bootstrap'
+
+import Button from 'material-ui/Button'
+import TextField from 'material-ui/TextField'
+import Radio, { RadioGroup } from 'material-ui/Radio'
+import Dialog, { DialogTitle, DialogContent, DialogActions } from 'material-ui/Dialog'
+import { FormControl, FormControlLabel, FormLabel, FormGroup, FormHelperText } from 'material-ui/Form'
+import { withStyles } from 'material-ui/styles'
 
 import cmc from './coinmarketcap'
 import util from './util'
+
+const preventDefault = (f) => (ev) => {
+	ev.preventDefault()
+	return f(ev)
+}
 
 const defaultState = {
 	bought: 'crypto',
@@ -16,6 +27,17 @@ const defaultState = {
 	date: new Date(),
 	notes: '',
 }
+
+const styles = (theme) => ({
+	content: {
+		display: 'flex',
+		flexDirection: 'column',
+	},
+
+	spacer: {
+		height: theme.spacing.unit * 2,
+	},
+})
 
 class Add extends Component {
 	state = defaultState
@@ -84,7 +106,7 @@ class Add extends Component {
 		})
 	}
 
-	with = (type) => () => {
+	with = (ev, type) => {
 		this.setState({
 			with: type,
 			withID: '',
@@ -114,131 +136,116 @@ class Add extends Component {
 
 	render() {
 		return (
-			<Modal show={this.props.show} onHide={this.props.onHide}>
-				<Modal.Header closeButton>
-					<Modal.Title>Add</Modal.Title>
-				</Modal.Header>
+			<Dialog
+				open={this.props.open}
+				onClose={this.props.onClose}
+				component={'form'}
+				onSubmit={preventDefault(this.add)}
+			>
+				<DialogTitle>Add</DialogTitle>
 
-				<Modal.Body>
-					<FormGroup controlId='bought'>
-						<ControlLabel>Bought (Total)</ControlLabel>
+				<DialogContent className={this.props.classes.content}>
+					{this.show('bought')
+						? <FormControl>
+								<FormLabel>Bought</FormLabel>
+								<FormGroup row>
+									<TextField
+										label='Coin'
+										value={this.state.boughtID}
+										onChange={this.setVal('boughtID')}
+										disabled={!this.placeholder('bought')}
+									/>
 
-						<Well bsStyle='column'>
-							{/*<ButtonGroup>
-								<Button
-									onClick={this.bought('crypto')}
-									disabled={this.state.bought === 'crypto'}
-								>Crypto</Button>
-								<Button
-									onClick={this.bought('fiat')}
-									disabled={this.state.bought === 'fiat'}
-								>Fiat</Button>
-							</ButtonGroup>*/}
+									<TextField
+										label='Amount'
+										type='number'
+										min={0}
+										value={this.state.boughtAmount}
+										onChange={this.setVal('boughtAmount', parseFloat)}
+									/>
+								</FormGroup>
+								<FormHelperText>Total amount bought.</FormHelperText>
+							</FormControl>
+						: null
+					}
 
-							{this.show('bought')
-								? <div className='flex-row'>
-										<FormControl
-											type='text'
-											value={this.state.boughtID}
-											onChange={this.setVal('boughtID')}
-											placeholder={this.placeholder('bought')}
-											disabled={!this.placeholder('bought')}
-										/>
+					<div className={this.props.classes.spacer} />
 
-										<FormControl
-											type='number'
-											value={this.state.boughtAmount}
-											onChange={this.setVal('boughtAmount', parseFloat)}
-											placeholder='Amount...'
-										/>
-									</div>
-								: null
-							}
-						</Well>
-					</FormGroup>
+					<FormControl>
+						<FormLabel>With</FormLabel>
+						<RadioGroup
+							row
+							value={this.state.with}
+							onChange={this.with}
+						>
+							<FormControlLabel
+								control={<Radio />}
+								label='Crypto'
+								value='crypto'
+							/>
+							<FormControlLabel
+								control={<Radio />}
+								label='Fiat'
+								value='fiat'
+							/>
+						</RadioGroup>
+						<FormGroup row>
+							<TextField
+								label='Coin'
+								value={this.state.withID}
+								onChange={this.setVal('withID')}
+								disabled={!this.placeholder('with')}
+							/>
+							<TextField
+								label='Amount'
+								type='number'
+								min={0}
+								value={this.state.withAmount}
+								onChange={this.setVal('withAmount')}
+							/>
+						</FormGroup>
+						<FormHelperText>Amount per coin bought.</FormHelperText>
+					</FormControl>
 
-					<FormGroup controlId='with'>
-						<ControlLabel>With (Per Coin Bought)</ControlLabel>
+					<div className={this.props.classes.spacer} />
 
-						<Well bsStyle='column'>
-							<ButtonGroup>
-								<Button
-									onClick={this.with('crypto')}
-									disabled={this.state.with === 'crypto'}
-								>Crypto</Button>
-								<Button
-									onClick={this.with('fiat')}
-									disabled={this.state.with === 'fiat'}
-								>Fiat</Button>
-								<Button onClick={this.with('received')}
-									disabled={this.state.with === 'received'}
-								>Received</Button>
-								{/*<Button
-									onClick={this.with('mined')}
-									disabled={this.state.with === 'mined'}
-								>Mined</Button>
-								<Button
-									onClick={this.with('used')}
-									disabled={this.state.with === 'used'}
-								>Used</Button>*/}
-							</ButtonGroup>
+					<FormControl>
+						<FormLabel>Date</FormLabel>
 
-							{this.show('with')
-								? <div className='flex-row'>
-										<FormControl
-											type='text'
-											value={this.state.withID}
-											onChange={this.setVal('withID')}
-											placeholder={this.placeholder('with')}
-											disabled={!this.placeholder('with')}
-										/>
-
-										<FormControl
-											type='number'
-											value={this.state.withAmount}
-											min={0}
-											onChange={this.setVal('withAmount', parseFloat)}
-										/>
-									</div>
-								: null
-							}
-						</Well>
-					</FormGroup>
-
-					<FormGroup controlId='date'>
-						<ControlLabel>Date</ControlLabel>
-
-						<FormControl
+						<TextField
 							type='date'
 							value={util.formatDate(this.state.date)}
 							onChange={this.setVal('date', (v) => new Date(v))}
 						/>
-					</FormGroup>
+					</FormControl>
 
-					<FormGroup controlId='notes'>
-						<ControlLabel>Notes</ControlLabel>
+					<div className={this.props.classes.spacer} />
 
-						<FormControl
-							componentClass='textarea'
+					<FormControl>
+						<FormLabel>Notes</FormLabel>
+
+						<TextField
+							multiline
+							rows={5}
 							value={this.state.notes}
 							onChange={this.setVal('notes')}
 						/>
-					</FormGroup>
-				</Modal.Body>
+					</FormControl>
+				</DialogContent>
 
-				<Modal.Footer>
+				<DialogActions>
 					<Button
-						bsStyle='primary'
+						color='secondary'
+						onClick={this.props.onClose}
+					>Cancel</Button>
+					<Button
+						color='primary'
 						onClick={this.add}
 					>Add</Button>
-					<Button
-						bsStyle='danger'
-						onClick={this.props.onHide}
-					>Cancel</Button>
-				</Modal.Footer>
-			</Modal>
+				</DialogActions>
+			</Dialog>
 		)
 	}
 }
 
-export default Add
+export default withStyles(styles)(Add)

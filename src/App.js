@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
-import { Alert, Button } from 'react-bootstrap'
+
+import AppBar from 'material-ui/AppBar'
+import Toolbar from 'material-ui/Toolbar'
+import Button from 'material-ui/Button'
+import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
 
 import Total from './Total'
 import Ticker from './Ticker'
 import CoinList from './CoinList'
 import Add from './Add'
-import Settings from './Settings'
-import Coin from './Coin'
+//import Settings from './Settings'
+//import Coin from './Coin'
 
 import util from './util'
 
@@ -17,6 +22,20 @@ import {
 
 	updatePrices,
 } from './store'
+
+const styles = (theme) => ({
+	root: {
+		postion: 'absolute',
+		top: theme.mixins.toolbar.minHeight + theme.spacing.unit,
+		bottom: 0,
+		left: 0,
+		right: 0,
+	},
+
+	spacer: {
+		flex: 1,
+	},
+})
 
 class App extends Component {
 	state = {
@@ -64,38 +83,38 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className='App'>
-				<div className='toolbar'>
-					<div className='left'>
-						<Total
-							prices={this.props.prices}
-							purchases={this.props.portfolio.purchases}
-						/>
-					</div>
+			<div className={this.props.classes.root}>
+				<AppBar>
+					<Toolbar>
+						<Typography variant='title' color='inherit'>
+							<Total
+								prices={this.props.prices}
+								purchases={this.props.portfolio.purchases}
+							/>
+						</Typography>
 
-					<div className='center'>
+						<div className={this.props.classes.spacer} />
+
 						<Ticker />
-					</div>
 
-					<div className='right'>
+						<div className={this.props.classes.spacer} />
+
 						<Button
-							bsStyle='primary'
 							onClick={() => this.showModal('add')}
 							disabled={!this.props.portfolioLocation}
 						>Add</Button>
 
 						<Button
-							bsStyle='info'
 							onClick={() => this.showModal('settings')}
 						>Settings</Button>
-					</div>
-				</div>
+					</Toolbar>
+				</AppBar>
 
-				<div className='main'>
+				<div>
 					{!this.props.portfolioLocation
-						? <Alert bsStyle='danger'>
+						? <Typography color='error'>
 								No portfolio location chosen. Please do so in Settings.
-							</Alert>
+							</Typography>
 						: <CoinList
 								showCoin={(coin) => this.showModal('coin', coin)}
 							/>
@@ -103,23 +122,23 @@ class App extends Component {
 				</div>
 
 				<Add
-					show={this.modalShown('add')}
-					onHide={this.hideModal}
+					open={this.modalShown('add')}
+					onClose={this.hideModal}
 
 					onAdd={this.add}
 				/>
 
-				<Settings
+				{/*<Settings
 					show={this.modalShown('settings')}
 					onHide={this.hideModal}
-				/>
+				/>*/}
 
-				<Coin
+				{/*<Coin
 					show={this.modalShown('coin')}
 					onHide={this.hideModal}
 
 					coin={this.state.modal.args[0]}
-				/>
+				/>*/}
 			</div>
 		)
 	}
@@ -140,4 +159,4 @@ export default connect(
 
 		updatePrices,
 	},
-)(App)
+)(withStyles(styles)(App))

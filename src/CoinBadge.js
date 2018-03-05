@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Image } from 'react-bootstrap'
 
 import Price from './Price'
 
@@ -18,11 +17,9 @@ class CoinBadge extends Component {
 				className={`CoinBadge ${!this.props.link ? 'not-link' : ''}`}
 				onClick={this.props.link ? this.openCoin : null}
 			>
-				<Image
-					className='Image'
+				<img
 					alt={this.props.id}
 					src={cmc.getImageURL(this.props.id)}
-					responsive={true}
 				/>
 				<Price
 					price={this.props.price}

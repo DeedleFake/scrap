@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import { Alert, ListGroup, ListGroupItem } from 'react-bootstrap'
+
+import Avatar from 'material-ui/Avatar'
+import Typography from 'material-ui/Typography'
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 
 import CoinBadge from './CoinBadge'
 import Total from './Total'
@@ -16,51 +19,49 @@ class CoinList extends Component {
 	render() {
 		if (!this.props.coins || !this.props.coins.size) {
 			return (
-				<Alert bsStyle='warning'>
+				<Typography color='error'>
 					Portfolio appears to be empty. Click the Add button on the toolbar to add a new purchase.
-				</Alert>
+				</Typography>
 			)
 		}
 
 		return (
 			<div className='CoinList'>
-				<ListGroup>
+				<List>
 					{[...this.props.coins].map((coin) => (
-						<ListGroupItem key={coin} onClick={() => this.props.showCoin(coin)}>
-							<div className='Item'>
-								<div className='price'>
-									<CoinBadge
-										id={coin}
-										price={this.price(coin)}
-									/>
-								</div>
+						<ListItem key={coin} button onClick={() => this.props.showCoin(coin)}>
+							<ListItemIcon><Avatar>
+								<CoinBadge
+									id={coin}
+									price={this.price(coin)}
+								/>
+							</Avatar></ListItemIcon>
 
-								<div className='name'>
-									{this.name(coin)}
-								</div>
+							<ListItemText
+								primary={this.name(coin)}
+							/>
 
-								<div className='owned'>
+							<ListItemText
+								primary={
 									<Total
 										owned
 										prices={this.props.prices}
 										purchases={this.props.purchases}
 										filter={(c) => c.id === coin}
 									/>
-									<span>{this.symbol(coin)}</span>
-								</div>
-
-								<div className='value'>
+								}
+								secondary={
 									<Total
 										value
 										prices={this.props.prices}
 										purchases={this.props.purchases}
 										filter={(c) => c.id === coin}
 									/>
-								</div>
-							</div>
-						</ListGroupItem>
+								}
+							/>
+						</ListItem>
 					))}
-				</ListGroup>
+				</List>
 			</div>
 		)
 	}
